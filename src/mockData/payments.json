@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "holder_id": 1,
+    "amount": 12000,
+    "late_fee": 0,
+    "total_amount": 12000,
+    "due_date": "2025-12-01",
+    "paid_date": "2025-11-28",
+    "status": "Paid",
+    "payment_method": "UPI",
+    "reference_no": "UPI-48192801934",
+    "receipt_no": "RCP-2026-001",
+    "collector": "Pooja Hegde (Desk #01)",
+    "notes": "Annual premium renewal via Google Pay UPI"
+  },
+  {
+    "id": 2,
+    "holder_id": 2,
+    "amount": 15000,
+    "late_fee": 0,
+    "total_amount": 15000,
+    "due_date": "2026-04-15",
+    "paid_date": "2026-04-10",
+    "status": "Paid",
+    "payment_method": "Credit Card",
+    "reference_no": "POS-CC-90182",
+    "receipt_no": "RCP-2026-002",
+    "collector": "Pooja Hegde (Desk #01)",
+    "notes": "HDFC Visa Credit Card tap & pay"
+  },
+  {
+    "id": 3,
+    "holder_id": 4,
+    "amount": 5400,
+    "late_fee": 0,
+    "total_amount": 5400,
+    "due_date": "2026-09-18",
+    "paid_date": "2026-09-17",
+    "status": "Paid",
+    "payment_method": "Bank Transfer",
+    "reference_no": "NEFT-SBI-491029",
+    "receipt_no": "RCP-2026-003",
+    "collector": "Pooja Hegde (Desk #01)",
+    "notes": "Monthly ECS standing instruction cleared"
+  },
+  {
+    "id": 4,
+    "holder_id": 5,
+    "amount": 28000,
+    "late_fee": 0,
+    "total_amount": 28000,
+    "due_date": "2026-10-13",
+    "paid_date": "2026-10-13",
+    "status": "Paid",
+    "payment_method": "Cheque",
+    "reference_no": "CHQ-889124 (ICICI Bank)",
+    "receipt_no": "RCP-2026-004",
+    "collector": "Pooja Hegde (Desk #01)",
+    "notes": "Annual premium cheque deposited and cleared"
+  }
+]

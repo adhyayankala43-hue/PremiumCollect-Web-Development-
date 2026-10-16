@@ -1,0 +1,11 @@
+[
+  { "id": 1, "holder_id": 1, "installment_no": 1, "total_installments": 16, "amount": 12000, "due_date": "2025-12-01", "status": "Paid" },
+  { "id": 2, "holder_id": 1, "installment_no": 2, "total_installments": 16, "amount": 12000, "due_date": "2026-12-01", "status": "Pending" },
+  { "id": 3, "holder_id": 2, "installment_no": 1, "total_installments": 20, "amount": 15000, "due_date": "2026-04-15", "status": "Paid" },
+  { "id": 4, "holder_id": 2, "installment_no": 2, "total_installments": 20, "amount": 15000, "due_date": "2026-10-25", "status": "Pending" },
+  { "id": 5, "holder_id": 3, "installment_no": 3, "total_installments": 40, "amount": 8500, "due_date": "2026-09-10", "status": "Overdue" },
+  { "id": 6, "holder_id": 4, "installment_no": 8, "total_installments": 120, "amount": 5400, "due_date": "2026-09-18", "status": "Paid" },
+  { "id": 7, "holder_id": 4, "installment_no": 9, "total_installments": 120, "amount": 5400, "due_date": "2026-10-18", "status": "Pending" },
+  { "id": 8, "holder_id": 5, "installment_no": 2, "total_installments": 25, "amount": 28000, "due_date": "2026-10-13", "status": "Paid" },
+  { "id": 9, "holder_id": 6, "installment_no": 1, "total_installments": 1, "amount": 18500, "due_date": "2026-10-30", "status": "Pending" }
+]
