@@ -1,0 +1,19 @@
+{
+  "name": "premium-collect",
+  "version": "1.0.0",
+  "description": "Insurance Premium Collection & Payment Tracking Platform (WD-LIC-003) - Data Alcott Systems Free Web Development Internship Online",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "premium-collection",
+    "insurance",
+    "lic",
+    "web-development-internship",
+    "data-alcott-systems"
+  ],
+  "author": "DAS-LIC-003",
+  "license": "MIT"
+}

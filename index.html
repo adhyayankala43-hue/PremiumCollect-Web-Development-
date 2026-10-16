@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PremiumCollect - Comprehensive Insurance Premium Collection System (WD-LIC-003)</title>
+  <meta name="description" content="PremiumCollect - Front-office Insurance Premium Collection, Grace Period Management, Receipt Generation & Settlement Platform by Data Alcott Systems.">
+  
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Primary Application Stylesheet -->
+  <link rel="stylesheet" href="src/assets/style.css">
+</head>
+<body data-theme="light">
+  
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <div class="app-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">PremiumCollect</span>
+          <span class="brand-sub">DAS-LIC-003 • Counter</span>
+        </div>
+        <button id="sidebar-close-btn" class="sidebar-close-btn mobile-only" aria-label="Close Sidebar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Main Navigation">
+        <div class="nav-section-title">CORE OPERATIONS</div>
+        <ul class="nav-links">
+          <li class="nav-item">
+            <a href="#dashboard" class="nav-link active" data-section="dashboard" id="nav-dashboard">
+              <i class="fa-solid fa-chart-pie nav-icon"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#holders" class="nav-link" data-section="holders" id="nav-holders">
+              <i class="fa-solid fa-users nav-icon"></i>
+              <span>Policy Holders</span>
+              <span class="nav-badge" id="badge-holders-count">6</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#payment" class="nav-link" data-section="payment" id="nav-payment">
+              <i class="fa-solid fa-money-bill-wave nav-icon"></i>
+              <span>Premium Payment</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#installments" class="nav-link" data-section="installments" id="nav-installments">
+              <i class="fa-solid fa-calendar-days nav-icon"></i>
+              <span>Installments</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#due-dates" class="nav-link" data-section="due-dates" id="nav-due-dates">
+              <i class="fa-solid fa-hourglass-half nav-icon"></i>
+              <span>Due & Grace Dates</span>
+              <span class="nav-badge badge-warning-count" id="badge-overdue-count">1</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="nav-section-title">ACCOUNTING & AUDIT</div>
+        <ul class="nav-links">
+          <li class="nav-item">
+            <a href="#receipt" class="nav-link" data-section="receipt" id="nav-receipt">
+              <i class="fa-solid fa-receipt nav-icon"></i>
+              <span>Receipt Generation</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#history" class="nav-link" data-section="history" id="nav-history">
+              <i class="fa-solid fa-clock-rotate-left nav-icon"></i>
+              <span>Payment History</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#reconciliation" class="nav-link" data-section="reconciliation" id="nav-reconciliation">
+              <i class="fa-solid fa-scale-balanced nav-icon"></i>
+              <span>Reconciliation</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#reports" class="nav-link" data-section="reports" id="nav-reports">
+              <i class="fa-solid fa-file-invoice-dollar nav-icon"></i>
+              <span>Reports & MIS</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="internship-meta">
+          <div class="meta-label">Data Alcott Systems</div>
+          <div class="meta-sub">Free Online Internship</div>
+          <a href="https://www.freeinternships.in/blog/" target="_blank" rel="noopener" class="meta-link">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Task Submission
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      
+      <!-- Top Navigation Bar -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button id="sidebar-toggle-btn" class="icon-btn mobile-menu-btn" aria-label="Toggle Sidebar">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          
+          <div class="page-title-group">
+            <h1 id="current-page-title" class="page-title">Dashboard Overview</h1>
+            <span class="system-time" id="system-time-display"><i class="fa-regular fa-clock"></i> Loading clock...</span>
+          </div>
+        </div>
+
+        <div class="top-bar-right">
+          <!-- Quick Search -->
+          <div class="quick-search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="global-search-input" placeholder="Search policy #, holder name..." aria-label="Quick Search">
+            <div id="quick-search-dropdown" class="quick-search-results hidden"></div>
+          </div>
+
+          <!-- Quick Action: Bulk Entry -->
+          <button id="btn-open-bulk-modal" class="btn btn-outline btn-sm" title="Bulk Payment Entry">
+            <i class="fa-solid fa-layer-group"></i>
+            <span class="hide-mobile">Bulk Entry</span>
+          </button>
+
+          <!-- Role Selector -->
+          <div class="role-selector-wrapper">
+            <label for="user-role-select" class="visually-hidden">Current Role</label>
+            <div class="role-badge">
+              <i class="fa-solid fa-id-badge"></i>
+              <select id="user-role-select" aria-label="Select User Role">
+                <option value="Admin">Admin</option>
+                <option value="Cashier" selected>Cashier</option>
+                <option value="Agent">Agent</option>
+                <option value="Policyholder">Policyholder</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Account Sign-In / Switch Button -->
+          <button id="btn-open-auth-modal" class="btn btn-outline btn-sm" title="Sign In / Switch User Account">
+            <i class="fa-solid fa-user-lock"></i>
+            <span class="hide-mobile">Account</span>
+          </button>
+
+          <!-- Notification Bell -->
+          <div class="notification-wrapper">
+            <button id="notification-btn" class="icon-btn" aria-label="Notifications" title="Reminders & Notifications">
+              <i class="fa-regular fa-bell"></i>
+              <span id="notification-counter" class="notification-dot">3</span>
+            </button>
+            <div id="notification-dropdown" class="notification-dropdown hidden">
+              <div class="notification-header">
+                <h3>Notifications & Alerts</h3>
+                <button id="clear-notifications-btn" class="btn-text">Clear All</button>
+              </div>
+              <ul id="notification-list" class="notification-list">
+                <!-- Populated via JS -->
+              </ul>
+            </div>
+          </div>
+
+          <!-- Dark Mode Toggle -->
+          <button id="theme-toggle-btn" class="icon-btn" aria-label="Toggle Dark Mode" title="Toggle Dark/Light Mode">
+            <i class="fa-solid fa-moon theme-icon-moon"></i>
+            <i class="fa-solid fa-sun theme-icon-sun"></i>
+          </button>
+
+          <!-- User Profile Pill -->
+          <div class="user-profile-pill">
+            <div class="avatar" id="user-avatar">PH</div>
+            <div class="user-info hide-mobile">
+              <span class="user-name" id="user-display-name">Pooja Hegde</span>
+              <span class="user-role-tag" id="user-role-tag">Cashier • Desk #01</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- User Session Context & Scope Indicator -->
+      <div id="user-scope-banner" class="user-scope-banner scope-cashier">
+        <div class="user-scope-info">
+          <span class="user-scope-badge" id="user-scope-badge"><i class="fa-solid fa-cash-register"></i> Cashier Session</span>
+          <span id="user-scope-text">Operating as <strong>Pooja Hegde</strong> (Desk #01) • Premium collection & receipt minting</span>
+        </div>
+        <div class="user-scope-actions">
+          <button type="button" class="btn btn-outline btn-sm" id="btn-banner-switch-user">
+            <i class="fa-solid fa-right-left"></i> Switch Role / Persona
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Application Views -->
+      <main class="main-content" id="main-content">
+        
+        <!-- SECTION 1: DASHBOARD -->
+        <section id="dashboard" class="content-section active">
+          <!-- Hero Banner -->
+          <div class="dashboard-hero">
+            <div class="hero-text">
+              <h2>Welcome to PremiumCollect Dashboard</h2>
+              <p>Insurance Premium Collection, Grace Period Management & Daily Settlement Platform</p>
+            </div>
+            <div class="hero-actions">
+              <button class="btn btn-light" id="hero-quick-pay-btn">
+                <i class="fa-solid fa-circle-plus"></i> Collect Premium Now
+              </button>
+              <button class="btn btn-outline-light" id="hero-add-holder-btn">
+                <i class="fa-solid fa-user-plus"></i> New Policy Holder
+              </button>
+              <button class="btn btn-outline-light" id="reset-sample-data-btn" title="Reload clean sample dataset with Amit Sharma, Priya Patel, etc.">
+                <i class="fa-solid fa-rotate"></i> Reset Sample Data
+              </button>
+            </div>
+          </div>
+
+          <!-- Key Metrics Stat Cards -->
+          <div class="stats-grid">
+            <div class="stat-card stat-primary">
+              <div class="stat-header">
+                <span class="stat-title">Daily Collections</span>
+                <i class="fa-solid fa-calendar-day"></i>
+              </div>
+              <div class="stat-value" id="stat-daily-collections">₹28,000</div>
+              <div class="stat-sub"><span id="stat-daily-count">1</span> transactions collected today</div>
+            </div>
+
+            <div class="stat-card stat-success">
+              <div class="stat-header">
+                <span class="stat-title">Monthly Collections</span>
+                <i class="fa-solid fa-sack-dollar"></i>
+              </div>
+              <div class="stat-value" id="stat-monthly-collections">₹60,400</div>
+              <div class="stat-sub"><span class="text-success" id="stat-target-pct">17% of target</span> (₹3,50,000 target)</div>
+            </div>
+
+            <div class="stat-card stat-warning">
+              <div class="stat-header">
+                <span class="stat-title">Pending & Grace Window</span>
+                <i class="fa-solid fa-hourglass-start"></i>
+              </div>
+              <div class="stat-value" id="stat-pending-amount">₹47,400</div>
+              <div class="stat-sub"><span id="stat-pending-count">4</span> accounts in grace / upcoming</div>
+            </div>
+
+            <div class="stat-card stat-danger">
+              <div class="stat-header">
+                <span class="stat-title">Overdue / Lapsed Dues</span>
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div class="stat-value" id="stat-overdue-amount">₹8,500</div>
+              <div class="stat-sub"><span id="stat-overdue-count">1</span> policy crossed 30-day grace</div>
+            </div>
+          </div>
+
+          <!-- Analytics Charts Grid -->
+          <div class="charts-grid">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fa-solid fa-chart-column"></i> Collection Trends (Target vs. Actual)</h3>
+                <span class="badge badge-success">FY 2026-27</span>
+              </div>
+              <div class="card-body">
+                <canvas id="chart-collection-trends" height="260"></canvas>
+              </div>
+            </div>
+
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fa-solid fa-chart-pie"></i> Payment Channels Breakdown</h3>
+                <span class="badge badge-primary">Volume %</span>
+              </div>
+              <div class="card-body">
+                <canvas id="chart-payment-methods" height="260"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Urgent Reminders & Quick Collection Table -->
+          <div class="dashboard-tables-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fa-solid fa-bell text-warning"></i> High Priority Due Reminders</h3>
+                <a href="#due-dates" class="navigate-link" data-section="due-dates">View All <i class="fa-solid fa-chevron-right"></i></a>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Holder Name</th>
+                      <th>Policy No</th>
+                      <th>Due Date</th>
+                      <th>Amount</th>
+                      <th>Grace Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboard-urgent-dues-tbody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fa-solid fa-receipt text-primary"></i> Recent Minted Receipts</h3>
+                <a href="#history" class="navigate-link" data-section="history">View History <i class="fa-solid fa-chevron-right"></i></a>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Receipt #</th>
+                      <th>Holder</th>
+                      <th>Amount</th>
+                      <th>Method</th>
+                      <th>Status</th>
+                      <th>Receipt</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboard-recent-payments-tbody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: POLICY HOLDER MANAGEMENT -->
+        <section id="holders" class="content-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title">Policy Holder Management</h2>
+              <p class="section-desc">Maintain insured profiles, policy terms, premium installments, and next payment schedules.</p>
+            </div>
+            <div class="header-action-group">
+              <button class="btn btn-secondary" id="btn-export-holders-csv">
+                <i class="fa-solid fa-file-csv"></i> Export CSV
+              </button>
+              <button class="btn btn-primary" id="btn-open-add-holder-modal">
+                <i class="fa-solid fa-user-plus"></i> Add Policy Holder
+              </button>
+            </div>
+          </div>
+
+          <!-- Search and Filter Bar -->
+          <div class="filter-card">
+            <div class="filter-group">
+              <div class="search-input-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="holder-search-input" placeholder="Search by name, policy number, or phone..." aria-label="Search Policy Holders">
+              </div>
+
+              <div class="select-wrapper">
+                <label for="holder-filter-freq" class="visually-hidden">Filter Frequency</label>
+                <select id="holder-filter-freq">
+                  <option value="">All Frequencies</option>
+                  <option value="Yearly">Yearly</option>
+                  <option value="Half-Yearly">Half-Yearly</option>
+                  <option value="Quarterly">Quarterly</option>
+                  <option value="Monthly">Monthly</option>
+                  <option value="Single Premium">Single Premium</option>
+                </select>
+              </div>
+
+              <div class="select-wrapper">
+                <label for="holder-filter-status" class="visually-hidden">Filter Status</label>
+                <select id="holder-filter-status">
+                  <option value="">All Statuses</option>
+                  <option value="Active">Active</option>
+                  <option value="Grace Period">In Grace Period</option>
+                  <option value="Overdue">Overdue / Lapsed</option>
+                </select>
+              </div>
+
+              <button class="btn btn-outline btn-sm" id="btn-reset-holder-filters">
+                <i class="fa-solid fa-rotate-left"></i> Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Scope Notice Container -->
+          <div id="holders-scope-notice-container"></div>
+
+          <!-- Policy Holders Data Table -->
+          <div class="card">
+            <div class="card-body table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Holder Name</th>
+                    <th>Policy No & Plan</th>
+                    <th>Premium (₹)</th>
+                    <th>Frequency</th>
+                    <th>Next Due Date</th>
+                    <th>Status</th>
+                    <th>Contact</th>
+                    <th class="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="holders-table-tbody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+              <div id="holders-empty-state" class="empty-state hidden">
+                <i class="fa-solid fa-users-slash empty-icon"></i>
+                <h4>No Policy Holders Found</h4>
+                <p>Try modifying your search or filter criteria.</p>
+              </div>
+
+              <!-- Holders Table Pagination Toolbar -->
+              <div id="holders-pagination-bar" class="table-pagination-bar">
+                <div class="pagination-info" id="holders-pagination-info">
+                  Showing 1–25 of 2,006 policyholders
+                </div>
+                <div class="pagination-controls">
+                  <div class="page-size-selector">
+                    <label for="holders-page-size">Per page:</label>
+                    <select id="holders-page-size" class="pagination-select">
+                      <option value="25" selected>25</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                      <option value="250">250</option>
+                      <option value="all">All (2,000+)</option>
+                    </select>
+                  </div>
+                  <div class="pagination-nav" id="holders-pagination-nav"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: PREMIUM PAYMENT COLLECTION COUNTER -->
+        <section id="payment" class="content-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title">Collect Premium Payment</h2>
+              <p class="section-desc">Fast counter intake, payment method verification, grace period penalty assessment, and instant receipt minting.</p>
+            </div>
+            <div class="header-action-group">
+              <button class="btn btn-outline" id="btn-clear-payment-form">
+                <i class="fa-solid fa-eraser"></i> Clear Form
+              </button>
+            </div>
+          </div>
+
+          <div class="payment-counter-grid">
+            <!-- Left Column: Payment Form -->
+            <div class="card payment-form-card">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fa-solid fa-cash-register"></i> Collection Terminal</h3>
+                <span class="badge badge-success">Counter Active</span>
+              </div>
+              <div class="card-body">
+                <form id="premium-collection-form" novalidate>
+                  
+                  <!-- Policy Holder Selection -->
+                  <div class="form-group">
+                    <label for="pay-holder-search" class="form-label">Search Policyholder (by Name or LIC No)</label>
+                    <div class="search-input-wrapper mb-2">
+                      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                      <input type="text" id="pay-holder-search" class="search-input" placeholder="Type name or policy number (e.g. Amit, LIC-10025, Verma)...">
+                    </div>
+                    <label for="pay-holder-select" class="form-label required">Select Policy Holder (${state.holders.length || 2006} records)</label>
+                    <div class="select-wrapper">
+                      <select id="pay-holder-select" class="form-control" required>
+                        <option value="">-- Choose Policy Holder / Select from List --</option>
+                        <!-- Populated via JS -->
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Quick Autofill Chips -->
+                  <div class="form-group">
+                    <label class="form-label-sm">Quick Select Recent Active Policies:</label>
+                    <div class="quick-autofill-chips" id="quick-autofill-chips">
+                      <!-- Populated via JS -->
+                    </div>
+                  </div>
+
+                  <!-- Dynamic Holder Policy Summary Box -->
+                  <div id="payment-holder-summary" class="holder-summary-card hidden">
+                    <div class="summary-header">
+                      <span class="summary-policy-no" id="pay-summary-policy-no">LIC-12345</span>
+                      <span class="badge" id="pay-summary-grace-badge">Active</span>
+                    </div>
+                    <div class="summary-grid">
+                      <div><span>Plan:</span> <strong id="pay-summary-plan">-</strong></div>
+                      <div><span>Frequency:</span> <strong id="pay-summary-freq">-</strong></div>
+                      <div><span>Next Due Date:</span> <strong id="pay-summary-due-date">-</strong></div>
+                      <div><span>Nominee:</span> <strong id="pay-summary-nominee">Self</strong></div>
+                    </div>
+                  </div>
+
+                  <!-- Amount and Late Fee Fields -->
+                  <div class="form-row">
+                    <div class="form-group flex-1">
+                      <label for="pay-amount-input" class="form-label required">Base Premium Amount (₹)</label>
+                      <div class="input-with-icon">
+                        <span class="input-prefix">₹</span>
+                        <input type="number" id="pay-amount-input" class="form-control" placeholder="0.00" min="1" step="0.01" required>
+                      </div>
+                    </div>
+
+                    <div class="form-group flex-1">
+                      <label for="pay-late-fee-input" class="form-label">Grace / Late Fee (₹)</label>
+                      <div class="input-with-icon">
+                        <span class="input-prefix">₹</span>
+                        <input type="number" id="pay-late-fee-input" class="form-control" placeholder="0.00" min="0" step="0.01" value="0">
+                      </div>
+                      <small class="form-hint" id="pay-late-fee-hint">Statutory 30-day grace period gives 0 penalty.</small>
+                    </div>
+                  </div>
+
+                  <!-- Total Net Amount Banner -->
+                  <div class="total-payable-banner">
+                    <div class="payable-label">NET AMOUNT TO COLLECT</div>
+                    <div class="payable-amount" id="pay-total-payable-display">₹0</div>
+                  </div>
+
+                  <!-- Payment Method Selection Grid -->
+                  <div class="form-group">
+                    <label class="form-label required">Payment Mode / Channel</label>
+                    <div class="payment-channels-grid">
+                      <label class="payment-channel-card active">
+                        <input type="radio" name="payment_method" value="UPI" checked>
+                        <i class="fa-solid fa-qrcode"></i>
+                        <span>UPI / QR</span>
+                      </label>
+                      <label class="payment-channel-card">
+                        <input type="radio" name="payment_method" value="Credit Card">
+                        <i class="fa-regular fa-credit-card"></i>
+                        <span>Card (POS)</span>
+                      </label>
+                      <label class="payment-channel-card">
+                        <input type="radio" name="payment_method" value="Bank Transfer">
+                        <i class="fa-solid fa-building-columns"></i>
+                        <span>NEFT / RTGS</span>
+                      </label>
+                      <label class="payment-channel-card">
+                        <input type="radio" name="payment_method" value="Cash">
+                        <i class="fa-solid fa-money-bill-1-wave"></i>
+                        <span>Counter Cash</span>
+                      </label>
+                      <label class="payment-channel-card">
+                        <input type="radio" name="payment_method" value="Cheque">
+                        <i class="fa-solid fa-money-check"></i>
+                        <span>Cheque / DD</span>
+                      </label>
+                      <label class="payment-channel-card">
+                        <input type="radio" name="payment_method" value="Mobile Wallet">
+                        <i class="fa-solid fa-wallet"></i>
+                        <span>Wallet</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Dynamic Method Specific Details -->
+                  <div id="payment-method-details" class="method-details-box">
+                    <!-- UPI fields -->
+                    <div id="method-fields-upi" class="method-subfield">
+                      <div class="form-group">
+                        <label for="pay-upi-ref" class="form-label">UPI Reference / UTR Number</label>
+                        <input type="text" id="pay-upi-ref" class="form-control" placeholder="e.g. 48192801934 or Google Pay Txn ID">
+                      </div>
+                    </div>
+
+                    <!-- Cheque fields -->
+                    <div id="method-fields-cheque" class="method-subfield hidden">
+                      <div class="form-row">
+                        <div class="form-group flex-1">
+                          <label for="pay-cheque-no" class="form-label">Cheque Number</label>
+                          <input type="text" id="pay-cheque-no" class="form-control" placeholder="e.g. 889124">
+                        </div>
+                        <div class="form-group flex-1">
+                          <label for="pay-cheque-bank" class="form-label">Drawee Bank Name</label>
+                          <input type="text" id="pay-cheque-bank" class="form-control" placeholder="e.g. State Bank of India">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Card fields -->
+                    <div id="method-fields-card" class="method-subfield hidden">
+                      <div class="form-row">
+                        <div class="form-group flex-1">
+                          <label for="pay-card-last4" class="form-label">Card Last 4 Digits</label>
+                          <input type="text" id="pay-card-last4" class="form-control" placeholder="e.g. 9018" maxlength="4">
+                        </div>
+                        <div class="form-group flex-1">
+                          <label for="pay-card-auth" class="form-label">POS Authorization Code</label>
+                          <input type="text" id="pay-card-auth" class="form-control" placeholder="e.g. AUTH-4819">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Bank / Cash / Generic Ref -->
+                    <div id="method-fields-generic" class="method-subfield hidden">
+                      <div class="form-group">
+                        <label for="pay-generic-ref" class="form-label">NEFT / RTGS / Counter Reference No</label>
+                        <input type="text" id="pay-generic-ref" class="form-control" placeholder="e.g. CMS-TRX-2026-9921">
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Notes / Remarks -->
+                  <div class="form-group">
+                    <label for="pay-notes-input" class="form-label">Transaction Remarks (Optional)</label>
+                    <input type="text" id="pay-notes-input" class="form-control" placeholder="e.g. Collected at branch counter, verified KYC">
+                  </div>
+
+                  <!-- Submit button -->
+                  <div class="form-actions-bar">
+                    <button type="submit" id="btn-submit-payment" class="btn btn-primary btn-lg flex-1">
+                      <i class="fa-solid fa-circle-check"></i> Process Payment & Issue Receipt
+                    </button>
+                    <button type="reset" id="btn-reset-payment-form" class="btn btn-outline btn-lg">
+                      <i class="fa-solid fa-arrows-rotate"></i> Reset
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+            </div>
+
+            <!-- Right Column: Quick Guidance & Live Mini Preview -->
+            <div class="payment-side-panel">
+              <!-- Verification Guidelines -->
+              <div class="card guidance-card">
+                <div class="card-header">
+                  <h4 class="card-title"><i class="fa-solid fa-circle-info"></i> Premium Guidelines</h4>
+                </div>
+                <div class="card-body">
+                  <ul class="guidance-list">
+                    <li>
+                      <i class="fa-solid fa-check-circle text-success"></i>
+                      <div>
+                        <strong>Grace Period (30 Days)</strong>
+                        <p>No late fee charged for payments made within 30 days of standard due date.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <i class="fa-solid fa-check-circle text-success"></i>
+                      <div>
+                        <strong>Instant Receipt Generation</strong>
+                        <p>Official computer-generated receipt with digital seal generated in PDF/print view.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <i class="fa-solid fa-check-circle text-success"></i>
+                      <div>
+                        <strong>Installment Automation</strong>
+                        <p>Next due date automatically rolls forward based on payment frequency.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <i class="fa-solid fa-check-circle text-success"></i>
+                      <div>
+                        <strong>Daily Bank Reconciliation</strong>
+                        <p>Each transaction automatically logs into today's ledger for settlement matching.</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Terminal Status Card -->
+              <div class="card terminal-card">
+                <div class="card-header">
+                  <h4 class="card-title"><i class="fa-solid fa-desktop"></i> Active Cashier Terminal</h4>
+                </div>
+                <div class="card-body">
+                  <div class="terminal-kv"><span>Branch Code:</span> <strong>DAS-LIC-003</strong></div>
+                  <div class="terminal-kv"><span>Counter Terminal:</span> <strong>Desk #01</strong></div>
+                  <div class="terminal-kv"><span>Operating Cashier:</span> <strong>Pooja Hegde</strong></div>
+                  <div class="terminal-kv"><span>Session Status:</span> <span class="badge badge-success">Online / Synced</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4: INSTALLMENT TRACKING -->
+        <section id="installments" class="content-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title">Installment Tracking & Schedules</h2>
+              <p class="section-desc">Track policy installments, schedule milestones, verify completion progress, and mark payments.</p>
+            </div>
+            <div class="header-action-group">
+              <button class="btn btn-secondary" id="btn-export-installments-csv">
+                <i class="fa-solid fa-file-csv"></i> Export Installments
+              </button>
+            </div>
+          </div>
+
+          <!-- Installment Metric Cards -->
+          <div class="stats-grid stats-grid-4">
+            <div class="mini-stat-card">
+              <span class="mini-label">Total Installments</span>
+              <strong class="mini-val" id="inst-stat-total">0</strong>
+            </div>
+            <div class="mini-stat-card border-success">
+              <span class="mini-label">Cleared / Paid</span>
+              <strong class="mini-val text-success" id="inst-stat-paid">0</strong>
+            </div>
+            <div class="mini-stat-card border-warning">
+              <span class="mini-label">Pending / Scheduled</span>
+              <strong class="mini-val text-warning" id="inst-stat-pending">0</strong>
+            </div>
+            <div class="mini-stat-card border-danger">
+              <span class="mini-label">Overdue & Grace</span>
+              <strong class="mini-val text-danger" id="inst-stat-overdue">0</strong>
+            </div>
+          </div>
+
+          <!-- Installment Search and Filter -->
+          <div class="filter-card">
+            <div class="filter-group">
+              <div class="search-input-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="inst-search-input" placeholder="Search by policy # or holder name..." aria-label="Search Installments">
+              </div>
+
+              <div class="select-wrapper">
+                <label for="inst-status-filter" class="visually-hidden">Filter Status</label>
+                <select id="inst-status-filter">
+                  <option value="">All Statuses</option>
+                  <option value="Paid">Paid</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Overdue">Overdue</option>
+                  <option value="Partial">Partial</option>
+                </select>
+              </div>
+
+              <button class="btn btn-outline btn-sm" id="btn-reset-inst-filters">
+                <i class="fa-solid fa-rotate-left"></i> Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Scope Notice Container -->
+          <div id="installments-scope-notice-container"></div>
+
+          <!-- Installment Table -->
+          <div class="card">
+            <div class="card-body table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Installment #</th>
+                    <th>Policy Holder</th>
+                    <th>Policy No</th>
+                    <th>Due Date</th>
+                    <th>Amount (₹)</th>
+                    <th>Status</th>
+                    <th class="text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="installments-table-tbody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+
+              <!-- Installments Table Pagination Toolbar -->
+              <div id="installments-pagination-bar" class="table-pagination-bar">
+                <div class="pagination-info" id="installments-pagination-info">
+                  Showing 1–25 of installments
+                </div>
+                <div class="pagination-controls">
+                  <div class="page-size-selector">
+                    <label for="installments-page-size">Per page:</label>
+                    <select id="installments-page-size" class="pagination-select">
+                      <option value="25" selected>25</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                      <option value="all">All</option>
+                    </select>
+                  </div>
+                  <div class="pagination-nav" id="installments-pagination-nav"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 5: DUE DATE & GRACE PERIOD MANAGEMENT -->
+        <section id="due-dates" class="content-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title">Due Date & Grace Period Management</h2>
+              <p class="section-desc">Monitor upcoming due dates, 30-day statutory grace period timers, and automated reminder broadcasts.</p>
+            </div>
+            <div class="header-action-group">
+              <button class="btn btn-warning" id="btn-send-bulk-reminders">
+                <i class="fa-solid fa-paper-plane"></i> Send All Due Reminders
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter & Grace explanation -->
+          <div class="due-banner-grid">
+            <div class="grace-info-card">
+              <div class="grace-icon"><i class="fa-solid fa-shield-cat"></i></div>
+              <div class="grace-content">
+                <h4>Standard 30-Day Grace Period Policy</h4>
+                <p>Policyholders receive a 30-day statutory grace window after due date during which cover remains fully active without late fines. After day 31, late fee of 1.5% is assessed.</p>
+              </div>
+            </div>
+            <div class="filter-card flex-1">
+              <div class="filter-group">
+                <div class="select-wrapper">
+                  <label for="due-filter-urgency" class="visually-hidden">Urgency Filter</label>
+                  <select id="due-filter-urgency">
+                    <option value="">All Due Categories</option>
+                    <option value="upcoming">Upcoming (Next 30 Days)</option>
+                    <option value="grace">Grace Period Active (0-30 Days Over)</option>
+                    <option value="lapsed">Lapsed / Critical Overdue (&gt;30 Days)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scope Notice Container -->
+          <div id="due-dates-scope-notice-container"></div>
+
+          <!-- Due Dates Cards & Table View -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Due Dates Ledger & Action Center</h3>
+            </div>
+            <div class="card-body table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Policy Holder</th>
+                    <th>Policy No</th>
+                    <th>Due Date</th>
+                    <th>Days Remaining / Overdue</th>
+                    <th>Grace Period Status</th>
+                    <th>Amount Due</th>
+                    <th class="text-right">Reminder Action</th>
+                  </tr>
+                </thead>
+                <tbody id="due-dates-table-tbody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+
+              <!-- Due Dates Table Pagination Toolbar -->
+              <div id="due-dates-pagination-bar" class="table-pagination-bar">
+                <div class="pagination-info" id="due-dates-pagination-info">
+                  Showing 1–25 of due date schedules
+                </div>
+                <div class="pagination-controls">
+                  <div class="page-size-selector">
+                    <label for="due-dates-page-size">Per page:</label>
+                    <select id="due-dates-page-size" class="pagination-select">
+                      <option value="25" selected>25</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                      <option value="all">All</option>
+                    </select>
+                  </div>
+                  <div class="pagination-nav" id="due-dates-pagination-nav"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 6: RECEIPT GENERATION & PREVIEW -->
+        <section id="receipt" class="content-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title">Receipt Generation & Printing</h2>
+              <p class="section-desc">Generate, preview, print, and download official insurance premium collection receipts with digital stamps.</p>
+            </div>
+            <div class="header-action-group">
+              <div class="select-wrapper">
+                <label for="receipt-selector-dropdown" class="visually-hidden">Select Receipt to View</label>
+                <select id="receipt-selector-dropdown">
+                  <option value="">-- Choose Receipt to View --</option>
+                  <!-- Populated via JS -->
+                </select>
+              </div>
+              <button class="btn btn-primary" id="btn-print-receipt">
+                <i class="fa-solid fa-print"></i> Print Receipt
+              </button>
+              <button class="btn btn-secondary" id="btn-email-sim-receipt">
+                <i class="fa-solid fa-envelope"></i> Send via Email
+              </button>
+            </div>
+          </div>
+
+          <!-- Printable Receipt Container -->
+          <div class="receipt-outer-wrapper">
+            <div id="official-receipt-card" class="official-receipt-card">
+              
+              <!-- Watermark -->
+              <div class="receipt-watermark">PAID</div>
+
+              <!-- Receipt Top Header -->
+              <div class="receipt-header">
+                <div class="receipt-org-logo">
+                  <div class="receipt-emblem"><i class="fa-solid fa-shield-halved"></i></div>
+                  <div>
+                    <h2 class="org-name">DATA ALCOTT INSURANCE SERVICES</h2>
+                    <p class="org-sub">Authorised Premium Collection Center • LIC Partner</p>
+                    <p class="org-sub">Registration No: DAS-LIC-003 • GSTIN: 33AAAAA0000A1Z5</p>
+                  </div>
+                </div>
+                <div class="receipt-meta-box">
+                  <div class="receipt-title-tag">OFFICIAL PREMIUM RECEIPT</div>
+                  <div class="receipt-no-display">Receipt No: <strong id="rcpt-number">RCP-2026-001</strong></div>
+                  <div class="receipt-date-display">Date: <span id="rcpt-date">13 Oct 2026</span></div>
+                  <div class="receipt-time-display">Time: <span id="rcpt-time">10:30 AM</span></div>
+                </div>
+              </div>
+
+              <div class="receipt-divider"></div>
+
+              <!-- Policy Holder and Plan Details Grid -->
+              <div class="receipt-details-grid">
+                <div class="receipt-col">
+                  <h4>Policy Holder Details</h4>
+                  <div class="kv-pair">
+                    <span class="k">Name of Insured:</span>
+                    <strong class="v" id="rcpt-holder-name">Amit Sharma</strong>
+                  </div>
+                  <div class="kv-pair">
+                    <span class="k">Policy Number:</span>
+                    <strong class="v text-primary" id="rcpt-policy-no">LIC-12345</strong>
+                  </div>
+                  <div class="kv-pair">
+                    <span class="k">Mobile Number:</span>
+                    <span class="v" id="rcpt-mobile">+91 98765 43210</span>
+                  </div>
+                  <div class="kv-pair">
+                    <span class="k">Email Address:</span>
+                    <span class="v" id="rcpt-email">amit.sharma@example.com</span>
+                  </div>
+                </div>
+
+                <div class="receipt-col">
+                  <h4>Policy & Premium Terms</h4>
+                  <div class="kv-pair">
+                    <span class="k">Insurance Plan:</span>
+                    <span class="v" id="rcpt-plan-name">Jeevan Labh (Plan 936)</span>
+                  </div>
+                  <div class="kv-pair">
+                    <span class="k">Payment Frequency:</span>
+                    <span class="v" id="rcpt-freq">Yearly</span>
+                  </div>
+                  <div class="kv-pair">
+                    <span class="k">Installment Due Date:</span>
+                    <span class="v" id="rcpt-due-date">01 Dec 2026</span>
+                  </div>
+                  <div class="kv-pair">
+                    <span class="k">Next Premium Due:</span>
+                    <span class="v text-success" id="rcpt-next-due">01 Dec 2027</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Payment Breakdown Table -->
+              <div class="receipt-breakdown-wrapper">
+                <table class="receipt-breakdown-table">
+                  <thead>
+                    <tr>
+                      <th>Description</th>
+                      <th>Coverage Period</th>
+                      <th>Tax Rate</th>
+                      <th class="text-right">Amount (₹)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <strong>Life Insurance Premium Installment</strong><br>
+                        <span class="text-muted text-xs" id="rcpt-installment-desc">Annual installment installment</span>
+                      </td>
+                      <td id="rcpt-coverage-period">2026 - 2027</td>
+                      <td>Exempt / Nil</td>
+                      <td class="text-right" id="rcpt-base-amount">₹12,000.00</td>
+                    </tr>
+                    <tr>
+                      <td>Late Fee / Grace Penalty</td>
+                      <td>-</td>
+                      <td>18% GST</td>
+                      <td class="text-right" id="rcpt-late-fee">₹0.00</td>
+                    </tr>
+                    <tr class="receipt-total-row">
+                      <td colspan="3" class="text-right"><strong>NET TOTAL RECEIVED</strong></td>
+                      <td class="text-right"><strong id="rcpt-total-amount">₹12,000.00</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Amount in words -->
+              <div class="receipt-words-box">
+                <span class="words-label">Amount in Words:</span>
+                <span class="words-text" id="rcpt-words">Twelve Thousand Rupees Only</span>
+              </div>
+
+              <!-- Transaction Mode & Settlement -->
+              <div class="receipt-settlement-row">
+                <div class="settle-item">
+                  <span class="k">Payment Channel:</span>
+                  <strong class="v" id="rcpt-method">UPI</strong>
+                </div>
+                <div class="settle-item">
+                  <span class="k">Reference / Txn ID:</span>
+                  <span class="v" id="rcpt-ref">UPI-748291038102</span>
+                </div>
+                <div class="settle-item">
+                  <span class="k">Collector / Cashier:</span>
+                  <span class="v" id="rcpt-collector">Counter #01 (DAS)</span>
+                </div>
+                <div class="settle-item">
+                  <span class="k">Status:</span>
+                  <span class="badge badge-success" id="rcpt-status">Paid / Reconciled</span>
+                </div>
+              </div>
+
+              <!-- Footer with Signatures & QR Code Simulation -->
+              <div class="receipt-footer">
+                <div class="receipt-qr-box">
+                  <div class="sim-qr-code">
+                    <i class="fa-solid fa-qrcode"></i>
+                  </div>
+                  <div class="qr-label">
+                    <span>Scan to verify receipt online</span><br>
+                    <small>freeinternships.in/verify</small>
+                  </div>
+                </div>
+
+                <div class="receipt-stamp-box">
+                  <div class="official-seal">
+                    <i class="fa-solid fa-stamp"></i>
+                    <span>DATA ALCOTT<br>OFFICIAL SEAL</span>
+                  </div>
+                </div>
+
+                <div class="receipt-signature-box">
+                  <div class="signature-line"></div>
+                  <div class="signature-text" id="rcpt-signatory">Authorized Signatory</div>
+                  <small id="rcpt-signatory-sub">Data Alcott Premium Collection</small>
+                </div>
+              </div>
+
+              <div class="receipt-legal-note">
+                <p>Note: This is a computer-generated insurance premium payment receipt valid under Section 64VB of the Insurance Act, 1938. Keep safely for Income Tax benefit under Section 80C.</p>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 7: PAYMENT HISTORY & AUDIT LEDGER -->
+        <section id="history" class="content-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title">Payment History & Audit Trail</h2>
+              <p class="section-desc">Immutable transaction log of all counter settlements, gateway payments, and issued receipts.</p>
+            </div>
+            <div class="header-action-group">
+              <button class="btn btn-secondary" id="btn-export-history-csv">
+                <i class="fa-solid fa-file-csv"></i> Export Ledger CSV
+              </button>
+            </div>
+          </div>
+
+          <!-- History Filter -->
+          <div class="filter-card">
+            <div class="filter-group">
+              <div class="search-input-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="history-search-input" placeholder="Search by receipt #, ref, or holder..." aria-label="Search History">
+              </div>
+
+              <div class="select-wrapper">
+                <label for="history-method-filter" class="visually-hidden">Payment Method</label>
+                <select id="history-method-filter">
+                  <option value="">All Payment Channels</option>
+                  <option value="UPI">UPI</option>
+                  <option value="Credit Card">Credit Card</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                  <option value="Cash">Cash</option>
+                  <option value="Cheque">Cheque</option>
+                  <option value="Mobile Wallet">Mobile Wallet</option>
+                </select>
+              </div>
+
+              <div class="select-wrapper">
+                <label for="history-status-filter" class="visually-hidden">Payment Status</label>
+                <select id="history-status-filter">
+                  <option value="">All Statuses</option>
+                  <option value="Paid">Paid</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Reconciled">Reconciled</option>
+                </select>
+              </div>
+
+              <button class="btn btn-outline btn-sm" id="btn-reset-history-filters">
+                <i class="fa-solid fa-rotate-left"></i> Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- History Table -->
+          <div class="card">
+            <div class="card-body table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Receipt No</th>
+                    <th>Policy Holder</th>
+                    <th>Policy No</th>
+                    <th>Method</th>
+                    <th>Reference / UTR</th>
+                    <th>Amount (₹)</th>
+                    <th>Status</th>
+                    <th class="text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="history-table-tbody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 8: PAYMENT RECONCILIATION -->
+        <section id="reconciliation" class="content-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title">Payment Reconciliation & Settlement</h2>
+              <p class="section-desc">Reconcile physical cash counter & electronic gateway records with bank deposits, track variances, and close batches.</p>
+            </div>
+            <div class="header-action-group">
+              <button class="btn btn-primary" id="btn-run-auto-reconciliation">
+                <i class="fa-solid fa-arrows-rotate"></i> Run Daily Auto-Reconcile
+              </button>
+            </div>
+          </div>
+
+          <!-- Scope Notice Container -->
+          <div id="recon-scope-notice-container"></div>
+
+          <!-- Reconciliation Metric Summary Cards -->
+          <div class="stats-grid stats-grid-4">
+            <div class="stat-card stat-primary">
+              <div class="stat-header">
+                <span class="stat-title">Total System Collected</span>
+                <i class="fa-solid fa-desktop"></i>
+              </div>
+              <div class="stat-value" id="recon-stat-system">₹0</div>
+              <div class="stat-sub">From all payment logs</div>
+            </div>
+
+            <div class="stat-card stat-success">
+              <div class="stat-header">
+                <span class="stat-title">Bank Verified Deposits</span>
+                <i class="fa-solid fa-building-columns"></i>
+              </div>
+              <div class="stat-value" id="recon-stat-bank">₹0</div>
+              <div class="stat-sub">Bank statement credit</div>
+            </div>
+
+            <div class="stat-card stat-warning">
+              <div class="stat-header">
+                <span class="stat-title">Discrepancy / Variance</span>
+                <i class="fa-solid fa-scale-unbalanced"></i>
+              </div>
+              <div class="stat-value" id="recon-stat-variance">₹0</div>
+              <div class="stat-sub" id="recon-stat-variance-sub">Zero variance is ideal</div>
+            </div>
+
+            <div class="stat-card stat-neutral">
+              <div class="stat-header">
+                <span class="stat-title">Reconciliation Status</span>
+                <i class="fa-solid fa-circle-check text-success"></i>
+              </div>
+              <div class="stat-value" id="recon-stat-status-badge">Balanced</div>
+              <div class="stat-sub">Last sync: Just now</div>
+            </div>
+          </div>
+
+          <!-- Reconciliation Statement Table -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Daily Batch Reconciliation Audit</h3>
+            </div>
+            <div class="card-body table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Settlement Date</th>
+                    <th>Payment Channel</th>
+                    <th>System Expected (₹)</th>
+                    <th>Bank Settled (₹)</th>
+                    <th>Discrepancy (₹)</th>
+                    <th>Audit Status</th>
+                    <th>Reconciled By</th>
+                    <th class="text-right">Audit Note</th>
+                  </tr>
+                </thead>
+                <tbody id="reconciliation-table-tbody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 9: REPORTS & EXPORT -->
+        <section id="reports" class="content-section">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title">Financial Reports & MIS Statements</h2>
+              <p class="section-desc">Generate audit-ready collection statements, due date aging analyses, and reconciliation reports.</p>
+            </div>
+            <div class="header-action-group">
+              <button class="btn btn-secondary" id="btn-export-active-report-csv">
+                <i class="fa-solid fa-file-csv"></i> Download CSV
+              </button>
+              <button class="btn btn-primary" id="btn-print-active-report">
+                <i class="fa-solid fa-print"></i> Print Statement
+              </button>
+            </div>
+          </div>
+
+          <!-- Report Config Card -->
+          <div class="filter-card">
+            <div class="filter-group">
+              <div class="select-wrapper">
+                <label for="report-type-select" class="visually-hidden">Report Type</label>
+                <select id="report-type-select">
+                  <option value="collection">Premium Collection Summary Report</option>
+                  <option value="defaulters">Due & Defaulters Aging Report</option>
+                  <option value="reconciliation">Daily Reconciliation Audit Report</option>
+                  <option value="frequency">Collections by Payment Frequency</option>
+                  <option value="agent_portfolio">Agent Commission & Portfolio Statement</option>
+                  <option value="tax_cert">Annual Premium Tax Certificate (Section 80C)</option>
+                </select>
+              </div>
+
+              <div class="select-wrapper">
+                <label for="report-period-select" class="visually-hidden">Report Period</label>
+                <select id="report-period-select">
+                  <option value="all">All Time</option>
+                  <option value="today">Today Only</option>
+                  <option value="this_month" selected>Current Month</option>
+                  <option value="this_year">Financial Year 2026-27</option>
+                </select>
+              </div>
+
+              <button class="btn btn-primary btn-sm" id="btn-generate-report">
+                <i class="fa-solid fa-filter"></i> Generate Report
+              </button>
+            </div>
+          </div>
+
+          <!-- Printable Report Container -->
+          <div id="printable-report-card" class="card report-container">
+            <div class="report-header-banner">
+              <div class="report-meta">
+                <h3 id="report-heading-title">Premium Collection Summary Report</h3>
+                <p id="report-heading-period">Period: Current Month (Oct 2026) • Entity: Data Alcott Systems</p>
+                <span class="report-gen-timestamp" id="report-gen-timestamp">Generated on: 13 Oct 2026</span>
+              </div>
+              <div class="report-seal">
+                <span class="pill-badge pill-green"><i class="fa-solid fa-check-double"></i> Certified Authentic</span>
+              </div>
+            </div>
+
+            <!-- Report KPI Cards -->
+            <div class="report-kpi-row" id="report-kpi-row">
+              <!-- Injected via JS -->
+            </div>
+
+            <!-- Report Table -->
+            <div class="card-body table-responsive">
+              <table class="data-table" id="report-data-table">
+                <thead id="report-table-thead">
+                  <!-- Injected via JS -->
+                </thead>
+                <tbody id="report-table-tbody">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- App Global Footer -->
+      <footer class="app-footer">
+        <div class="footer-left">
+          <span>Task ID: <strong>WD-LIC-003</strong></span> • 
+          <span>Student Code: <strong>DAS-LIC-003</strong></span> • 
+          <span>Industry: <strong>Insurance & Finance (LIC)</strong></span>
+        </div>
+        <div class="footer-right">
+          <span>Company: <a href="https://www.dataalcott.com" target="_blank" rel="noopener">Data Alcott Systems</a></span> • 
+          <span>Task Submission: <a href="https://www.freeinternships.in/blog/" target="_blank" rel="noopener">freeinternships.in/blog</a></span>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL DIALOGS -->
+  <!-- ========================================================================= -->
+
+  <!-- MODAL 1: ADD / EDIT POLICY HOLDER -->
+  <div id="modal-add-holder" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-holder-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-holder-title"><i class="fa-solid fa-user-plus"></i> Add New Policy Holder</h3>
+        <button class="modal-close-btn" data-close-modal="modal-add-holder" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-add-holder" novalidate>
+          <input type="hidden" id="holder-edit-id">
+          
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="new-holder-name" class="form-label required">Full Name</label>
+              <input type="text" id="new-holder-name" class="form-control" placeholder="e.g. Amit Sharma" required>
+            </div>
+            <div class="form-group flex-1">
+              <label for="new-holder-policy" class="form-label required">Policy Number</label>
+              <input type="text" id="new-holder-policy" class="form-control" placeholder="e.g. LIC-12345" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="new-holder-plan" class="form-label required">Insurance Plan Name</label>
+              <input type="text" id="new-holder-plan" class="form-control" placeholder="e.g. Jeevan Labh (Plan 936)" required>
+            </div>
+            <div class="form-group flex-1">
+              <label for="new-holder-sum-assured" class="form-label required">Sum Assured (₹)</label>
+              <input type="number" id="new-holder-sum-assured" class="form-control" placeholder="500000" min="50000" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="new-holder-amount" class="form-label required">Premium Installment (₹)</label>
+              <input type="number" id="new-holder-amount" class="form-control" placeholder="12000" min="500" required>
+            </div>
+            <div class="form-group flex-1">
+              <label for="new-holder-freq" class="form-label required">Payment Frequency</label>
+              <select id="new-holder-freq" class="form-control" required>
+                <option value="Yearly">Yearly</option>
+                <option value="Half-Yearly">Half-Yearly</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Single Premium">Single Premium</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="new-holder-due-date" class="form-label required">Next Due Date</label>
+              <input type="date" id="new-holder-due-date" class="form-control" required>
+            </div>
+            <div class="form-group flex-1">
+              <label for="new-holder-phone" class="form-label required">Contact Phone</label>
+              <input type="tel" id="new-holder-phone" class="form-control" placeholder="+91 98765 43210" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="new-holder-email" class="form-label">Email Address</label>
+              <input type="email" id="new-holder-email" class="form-control" placeholder="holder@example.com">
+            </div>
+            <div class="form-group flex-1">
+              <label for="new-holder-nominee" class="form-label">Nominee Name</label>
+              <input type="text" id="new-holder-nominee" class="form-control" placeholder="e.g. Sunita Sharma (Wife)">
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" data-close-modal="modal-add-holder">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btn-save-holder">
+              <i class="fa-solid fa-floppy-disk"></i> Save Policy Holder
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: BULK PAYMENT CLEARING ENTRY -->
+  <div id="modal-bulk-payment" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-bulk-title">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3 id="modal-bulk-title"><i class="fa-solid fa-layer-group"></i> Bulk Premium Collection Entry</h3>
+        <button class="modal-close-btn" data-close-modal="modal-bulk-payment" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-intro">Fast batch entry for corporate salary deductions, group schemes, or multi-policy renewal receipts.</p>
+        
+        <div class="bulk-table-wrapper table-responsive">
+          <table class="data-table" id="bulk-entry-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Policy Holder</th>
+                <th>Payment Mode</th>
+                <th>Amount (₹)</th>
+                <th>Reference / UTR</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="bulk-entry-tbody">
+              <!-- Populated via JS with 3 default rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bulk-actions-toolbar">
+          <button type="button" class="btn btn-outline btn-sm" id="btn-add-bulk-row">
+            <i class="fa-solid fa-plus"></i> Add Another Row
+          </button>
+          <div class="bulk-total-indicator">
+            <span>Batch Total:</span> <strong id="bulk-batch-total-display">₹0</strong>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-close-modal="modal-bulk-payment">Cancel</button>
+          <button type="button" class="btn btn-primary" id="btn-process-bulk-payments">
+            <i class="fa-solid fa-check-double"></i> Process Batch Collection
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: PAYMENT SUCCESS CONFIRMATION -->
+  <div id="modal-payment-success" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-success-title">
+    <div class="modal-card modal-sm text-center">
+      <div class="modal-body">
+        <div class="success-icon-wrap">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h3 id="modal-success-title" class="mt-2">Premium Collected Successfully!</h3>
+        <p class="text-muted text-sm mt-1">Official receipt has been minted and installment cleared.</p>
+        
+        <div class="success-details-card mt-3">
+          <div class="summary-line">
+            <span>Receipt Number:</span>
+            <strong id="success-modal-rcpt-no">RCP-2026-005</strong>
+          </div>
+          <div class="summary-line">
+            <span>Amount Paid:</span>
+            <strong class="text-success" id="success-modal-amount">₹12,000.00</strong>
+          </div>
+          <div class="summary-line">
+            <span>Payment Method:</span>
+            <span id="success-modal-method">UPI</span>
+          </div>
+        </div>
+
+        <div class="modal-action-buttons mt-4">
+          <button type="button" class="btn btn-primary btn-block" id="btn-success-view-receipt">
+            <i class="fa-solid fa-receipt"></i> View & Print Receipt
+          </button>
+          <button type="button" class="btn btn-outline btn-block mt-2" data-close-modal="modal-payment-success">
+            Collect Next Payment
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: SEND REMINDER (SMS / EMAIL / WHATSAPP SIMULATION) -->
+  <div id="modal-reminder" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-reminder-title">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h3 id="modal-reminder-title"><i class="fa-solid fa-paper-plane"></i> Dispatch Premium Reminder</h3>
+        <button class="modal-close-btn" data-close-modal="modal-reminder" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="reminder-holder-id">
+        <div class="reminder-recipient-card">
+          <div class="recipient-name" id="reminder-recipient-name">Amit Sharma</div>
+          <div class="recipient-policy" id="reminder-recipient-policy">Policy: LIC-12345 • Due in 18 days</div>
+          <div class="badge badge-warning mt-1" id="reminder-recipient-due-badge">Grace Period Active</div>
+        </div>
+
+        <div class="form-group mt-3">
+          <label class="form-label required">Notification Channel</label>
+          <div class="channel-pills">
+            <label class="channel-pill">
+              <input type="checkbox" name="reminder_channel" value="SMS" checked>
+              <i class="fa-solid fa-comment-sms"></i> SMS
+            </label>
+            <label class="channel-pill">
+              <input type="checkbox" name="reminder_channel" value="WhatsApp" checked>
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp
+            </label>
+            <label class="channel-pill">
+              <input type="checkbox" name="reminder_channel" value="Email" checked>
+              <i class="fa-solid fa-envelope"></i> Email
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group mt-2">
+          <label for="reminder-message-preview" class="form-label">Message Preview</label>
+          <textarea id="reminder-message-preview" class="form-control" rows="4"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-close-modal="modal-reminder">Cancel</button>
+          <button type="button" class="btn btn-primary" id="btn-dispatch-reminder">
+            <i class="fa-solid fa-paper-plane"></i> Dispatch Reminder
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: AUTHENTICATION / LOGIN & REGISTRATION -->
+  <div id="modal-auth" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-auth-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-auth-title"><i class="fa-solid fa-user-lock"></i> User Authentication & Roles</h3>
+        <button class="modal-close-btn" data-close-modal="modal-auth" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Auth Tabs -->
+        <div class="auth-tabs-nav">
+          <button type="button" class="auth-tab-btn active" id="tab-btn-login">Sign In</button>
+          <button type="button" class="auth-tab-btn" id="tab-btn-register">Register New User</button>
+        </div>
+
+        <!-- Tab 1: Login Form -->
+        <div id="auth-panel-login" class="auth-tab-panel">
+          <div class="quick-persona-section">
+            <span class="persona-label">Instant 1-Click Role Logins:</span>
+            <div class="persona-chips-grid">
+              <button type="button" class="btn-persona" data-user="admin">
+                <i class="fa-solid fa-crown text-warning"></i>
+                <div>
+                  <strong>Branch Admin</strong>
+                  <small>Manager Vikramaditya</small>
+                </div>
+              </button>
+              <button type="button" class="btn-persona" data-user="cashier1">
+                <i class="fa-solid fa-cash-register text-success"></i>
+                <div>
+                  <strong>Counter Cashier</strong>
+                  <small>Desk #01 Pooja</small>
+                </div>
+              </button>
+              <button type="button" class="btn-persona" data-user="agent1">
+                <i class="fa-solid fa-handshake text-primary"></i>
+                <div>
+                  <strong>Advisor / Agent</strong>
+                  <small>R. K. Verma (AG-102)</small>
+                </div>
+              </button>
+              <button type="button" class="btn-persona" data-user="holder_amit">
+                <i class="fa-solid fa-user-shield text-info"></i>
+                <div>
+                  <strong>Policyholder Portal</strong>
+                  <small>Amit Sharma (LIC-12345)</small>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div class="auth-divider"><span>OR SIGN IN WITH CREDENTIALS</span></div>
+
+          <form id="form-auth-login">
+            <div class="form-group">
+              <label for="login-username" class="form-label required">Username or Email</label>
+              <div class="input-with-icon">
+                <i class="fa-regular fa-user"></i>
+                <input type="text" id="login-username" class="form-control" placeholder="e.g. admin or cashier1" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="login-password" class="form-label required">Password</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-key"></i>
+                <input type="password" id="login-password" class="form-control" placeholder="Enter password" value="lic123" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Account
+            </button>
+          </form>
+        </div>
+
+        <!-- Tab 2: Register Form -->
+        <div id="auth-panel-register" class="auth-tab-panel hidden">
+          <form id="form-auth-register">
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label for="reg-fullname" class="form-label required">Full Name</label>
+                <input type="text" id="reg-fullname" class="form-control" placeholder="e.g. Suresh Nair" required>
+              </div>
+              <div class="form-group flex-1">
+                <label for="reg-username" class="form-label required">Username</label>
+                <input type="text" id="reg-username" class="form-control" placeholder="e.g. suresh_agent" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label for="reg-email" class="form-label required">Email</label>
+                <input type="email" id="reg-email" class="form-control" placeholder="suresh@example.com" required>
+              </div>
+              <div class="form-group flex-1">
+                <label for="reg-role" class="form-label required">System Role</label>
+                <select id="reg-role" class="form-control" required>
+                  <option value="Cashier">Counter Cashier</option>
+                  <option value="Agent">Field Agent / Advisor</option>
+                  <option value="Policyholder">Insured Policyholder</option>
+                  <option value="Admin">Branch Administrator</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label for="reg-code" class="form-label">Desk # / Agent Code / Policy #</label>
+                <input type="text" id="reg-code" class="form-control" placeholder="e.g. AG-118 or Desk #02">
+              </div>
+              <div class="form-group flex-1">
+                <label for="reg-password" class="form-label required">Password</label>
+                <input type="password" id="reg-password" class="form-control" placeholder="Create password" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">
+              <i class="fa-solid fa-user-plus"></i> Register & Log In
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6: USER PROFILE & SESSION DETAILS -->
+  <div id="modal-profile" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-profile-title">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h3 id="modal-profile-title"><i class="fa-solid fa-id-card"></i> User Profile & Session</h3>
+        <button class="modal-close-btn" data-close-modal="modal-profile" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="profile-avatar-large" id="modal-profile-avatar">PH</div>
+        <h3 id="modal-profile-name" class="mt-2">Pooja Hegde</h3>
+        <div id="modal-profile-role-badge" class="badge badge-success mt-1">Cashier Desk #01</div>
+        
+        <div class="profile-details-card mt-3">
+          <div class="summary-line">
+            <span>Username:</span>
+            <strong id="modal-profile-username">cashier1</strong>
+          </div>
+          <div class="summary-line">
+            <span>Email:</span>
+            <span id="modal-profile-email">pooja.c01@dataalcott.com</span>
+          </div>
+          <div class="summary-line">
+            <span>Terminal / Code:</span>
+            <span id="modal-profile-code">Desk #01</span>
+          </div>
+          <div class="summary-line">
+            <span>Access Tier:</span>
+            <span class="text-primary font-bold" id="modal-profile-tier">Payment & Receipt Issue</span>
+          </div>
+        </div>
+
+        <div class="modal-action-buttons mt-3">
+          <button type="button" class="btn btn-primary btn-block" id="btn-profile-switch-account">
+            <i class="fa-solid fa-right-left"></i> Switch User / Role
+          </button>
+          <button type="button" class="btn btn-outline btn-block mt-2 text-danger" id="btn-profile-logout">
+            <i class="fa-solid fa-power-off"></i> Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic (Modular ES Module Router & Components) -->
+  <script type="module" src="src/App.js"></script>
+  <!-- Fallback for legacy offline file execution -->
+  <script nomodule src="script.js"></script>
+</body>
+</html>
