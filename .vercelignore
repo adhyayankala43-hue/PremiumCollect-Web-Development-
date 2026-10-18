@@ -1,0 +1,28 @@
+# Exclude heavy/irrelevant files from Vercel deployment
+# The deployed app only needs: index.html, style.css, script.js, and root SVG assets
+
+# Video & audio assets (not referenced by the web app)
+*.mp4
+*.wav
+*.mov
+*.webm
+
+# Local video tooling + its dependencies
+video-tools/
+
+# Local server & launchers (not needed on Vercel — static hosting)
+server.js
+run.bat
+start.bat
+*.ps1
+*.py
+
+# Node modules & lockfiles (no build step on Vercel)
+node_modules/
+package-lock.json
+
+# Docs & reports (optional — keep them out of the deployed bundle)
+*.md
+
+# Vercel's own config
+.vercel/

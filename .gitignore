@@ -1,0 +1,21 @@
+# Heavy media assets (not referenced by the web app; ~120MB total)
+*.mp4
+*.wav
+*.mov
+*.webm
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Local video tooling (Remotion project with its own node_modules)
+video-tools/
+
+# Local agent/tooling config
+.agents/
+
+# Vercel CLI link state
+.vercel/
+
+# Logs
+*.log
